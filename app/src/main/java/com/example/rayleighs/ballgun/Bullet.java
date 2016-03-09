@@ -14,10 +14,24 @@ public class Bullet {
         this.cy = gun.baseY;
     }
 
-    public void move(){
+    public void move(int screenX, int screenY){
         if(fired){
+            // xoa va cham
+            if(cx < 0) cx = 0;
+            if(cx > screenX) cx = screenX;
+            if(cy < 0) cy = 0;
+            if(cy > screenY) cy = screenY;
+
+            // kiem tra va cham
+            if(cx == 0 || cx == screenX){
+                dx = - dx;
+            }
+            if(cy == 0 || cy == screenY){
+                dy = - dy;
+            }
             cx += dx;
             cy += dy;
+
         }
     }
 }

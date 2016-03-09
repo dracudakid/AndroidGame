@@ -45,9 +45,12 @@ public class Gun {
     }
 
     public void fire(Bullet b){
-        b.fired = true;
-        b.dx = (topX - baseX)/length * 10;
-        b.dy = (topY - baseY)/length * 10;
+        if(!b.fired){
+            b.fired = true;
+            b.dx = (topX - baseX)/length * 10;
+            b.dy = (topY - baseY)/length * 10;
+        }
+
     }
 
 }

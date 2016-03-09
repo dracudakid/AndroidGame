@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.RectF;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -32,6 +33,7 @@ public class BallGunView extends View{
     private long timeThisFrame;
     Bullet bullet;
     Gun gun;
+    Brick[] bricks = new Brick[5];
 
 
     public BallGunView(Context context) {
@@ -43,6 +45,9 @@ public class BallGunView extends View{
 
         gun = new Gun(screenX, screenY);
         bullet = new Bullet(gun);
+        for(int i=0; i<5; i++){
+            bricks[i] = new Brick(screenX, screenY);
+        }
 
     }
 
@@ -51,10 +56,18 @@ public class BallGunView extends View{
         super.onDraw(canvas);
         // background
         canvas.drawColor(Color.argb(255, 255, 255, 255));
-        paint.setColor(Color.argb(255, 200, 255, 180));
+
+
+        // brick
+        paint.setColor(Color.BLACK);
+        for(int i=0; i<5; i++){
+            Brick brick = bricks[i];
+            canvas.drawRect(new RectF(brick.x, brick.y, brick.x+brick.width, brick.y+brick.length), paint);
+        }
 
 
         // gun base
+        paint.setColor(Color.argb(255, 200, 255, 180));
         canvas.drawCircle(gun.baseX, gun.baseY, gun.length, paint);
         paint.setColor(Color.BLACK);
 
@@ -67,7 +80,7 @@ public class BallGunView extends View{
         Log.d("SIN", Math.sin(Math.PI / 2) + "");
 
         gun.move();
-        bullet.move();
+        bullet.move(screenX, screenY);
         try {
             Thread.sleep(100);
         } catch (InterruptedException e) {
