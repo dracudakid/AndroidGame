@@ -20,7 +20,7 @@ public class Gun {
     double angle;
     double speed;
 
-    boolean stopped;
+    boolean stopped = true;
 
     public Gun(float screenX, float screenY) {
         this.length = screenX/4;

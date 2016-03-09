@@ -79,7 +79,10 @@ public class BallGunView extends View{
     public boolean onTouchEvent(MotionEvent event) {
         switch (event.getAction()){
             case KeyEvent.ACTION_DOWN:
-                gun.stopped = !gun.stopped;
+                gun.stopped = false;
+                break;
+            case KeyEvent.ACTION_UP:
+                gun.stopped = true;
                 break;
         }
         return true;
