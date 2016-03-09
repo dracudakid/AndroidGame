@@ -67,6 +67,7 @@ public class BallGunView extends View{
         Log.d("SIN", Math.sin(Math.PI / 2) + "");
 
         gun.move();
+        bullet.move();
         try {
             Thread.sleep(100);
         } catch (InterruptedException e) {
@@ -83,6 +84,7 @@ public class BallGunView extends View{
                 break;
             case KeyEvent.ACTION_UP:
                 gun.stopped = true;
+                gun.fire(bullet);
                 break;
         }
         return true;

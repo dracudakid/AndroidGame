@@ -6,13 +6,18 @@ package com.example.rayleighs.ballgun;
 public class Bullet {
     float cx, cy;
     float radius;
+    float dx = 0, dy = 0;
     boolean fired = false;
     public Bullet(Gun gun) {
-        this.radius = 10;
+        this.radius = 8;
         this.cx = gun.baseX;
         this.cy = gun.baseY;
     }
 
     public void move(){
+        if(fired){
+            cx += dx;
+            cy += dy;
+        }
     }
 }

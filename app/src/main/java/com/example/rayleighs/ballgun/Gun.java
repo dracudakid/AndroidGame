@@ -23,7 +23,7 @@ public class Gun {
     boolean stopped = true;
 
     public Gun(float screenX, float screenY) {
-        this.length = screenX/4;
+        this.length = screenX/5;
 
         this.baseX = screenX/2;
         this.baseY = screenY;
@@ -42,6 +42,12 @@ public class Gun {
             topX =(float) (baseX + length*Math.cos(angle));
             topY =(float) (baseY - length*Math.sin(angle));
         }
+    }
+
+    public void fire(Bullet b){
+        b.fired = true;
+        b.dx = (topX - baseX)/length * 10;
+        b.dy = (topY - baseY)/length * 10;
     }
 
 }
