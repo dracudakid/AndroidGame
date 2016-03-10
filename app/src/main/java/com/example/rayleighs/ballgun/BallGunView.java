@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.RectF;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -33,7 +32,7 @@ public class BallGunView extends View{
     private long timeThisFrame;
     Bullet bullets[] = new Bullet[3];
     Gun gun;
-    Brick[] bricks = new Brick[5];
+    Mark mark;
 
 
     public BallGunView(Context context) {
@@ -44,10 +43,9 @@ public class BallGunView extends View{
         screenY = 1230;
 
         gun = new Gun(screenX, screenY);
+        mark = new Mark(screenY/3, screenX/3, screenX/6);
 
-        for(int i=0; i<5; i++){
-            bricks[i] = new Brick(screenX, screenY);
-        }
+
         for(int i=0; i<3; i++){
             bullets[i] = new Bullet(screenX, screenY, i+1);
         }
@@ -59,14 +57,18 @@ public class BallGunView extends View{
         // background
         canvas.drawColor(Color.argb(255, 192, 192, 192));
 
+        paint.setColor(Color.WHITE);
+        if(mark.isVisible == true){
+            canvas.drawCircle(mark.cx, mark.cy, mark.radius, paint);
+        }
 
         // brick
         paint.setColor(Color.BLACK);
-        for(int i=0; i<bricks.length; i++){
-            Brick brick = bricks[i];
-            canvas.drawRect(new RectF(brick.x, brick.y, brick.x+brick.width, brick.y+brick.height), paint);
-            brickCollision(gun.activeBullet, brick);
-        }
+//        for(int i=0; i<bricks.length; i++){
+//            Brick brick = bricks[i];
+//            canvas.drawRect(new RectF(brick.x, brick.y, brick.x+brick.width, brick.y+brick.height), paint);
+//            brickCollision(gun.activeBullet, brick);
+//        }
 
 
         // gun base
@@ -88,7 +90,7 @@ public class BallGunView extends View{
 
         gun.move();
         gun.loadBullet(bullets);
-//         bullet.move(screenX, screenY);
+        markCollision(gun.activeBullet, mark);
 
         try {
             Thread.sleep(30);
@@ -135,6 +137,33 @@ public class BallGunView extends View{
                 bullet.dy = - bullet.dy;
             }
 
+        }
+
+    }
+
+    private void markCollision(Bullet b, Mark m){
+        if(m.isVisible){
+            double d = Math.sqrt((b.cx - m.cx)*(b.cx - m.cx) + (b.cy - m.cy)*(b.cy - m.cy));
+            if(d <= b.radius + m.radius){
+                m.isVisible = false;
+                if(b.dx * m.dx < 0 && b.dy * m.dy < 0){
+                    b.dx = - b.dx;
+                    b.dy = - b.dy;
+                    m.dx = - m.dx;
+                    m.dy = - m.dy;
+                } else if(b.dx * m.dx < 0){
+                    b.dx =- b.dx;
+                    m.dx = - m.dx;
+                } else if(b.dy * m.dy < 0){
+                    b.dy = - b.dy;
+                    m.dy = - m.dy;
+                } else{
+                    b.dx = - b.dx;
+                    b.dy = - b.dy;
+                    m.dx = - m.dx;
+                    m.dy = - m.dy;
+                }
+            }
         }
 
     }
