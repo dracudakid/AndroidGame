@@ -117,6 +117,11 @@ public class BallGunView extends View{
                     marks.add(new Mark(screenX*3/4, screenY/4, screenX/12));
                     bricks.add(new Brick(screenX / 3 + 50, screenY / 4 + 50, screenX / 4, screenY / 40));
                     break;
+                case 3:
+                    marks.add(new Mark(screenX/4, screenY/6, screenX/15));
+                    marks.add(new Mark(screenX*4/5, screenY/7, screenX/18));
+                    bricks.add(new Brick(50, screenY / 5 + 50, screenX / 4, screenY / 40));
+                    bricks.add(new Brick(screenX *3/4, screenY / 5 + 50, screenX / 4, screenY / 40));
 
             }
         }
