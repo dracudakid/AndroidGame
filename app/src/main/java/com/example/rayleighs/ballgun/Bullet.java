@@ -7,6 +7,7 @@ public class Bullet {
     public static final int FIRED = 2;
     public static final int LOADED = 1;
     public static final int FREE = 0;
+    public static final int OUT = 3;
 
     int screenX, screenY;
     float cx, cy;
@@ -24,6 +25,11 @@ public class Bullet {
 
     public void move(){
         if(state == FIRED){
+
+            // kiem tra xem
+            if(cy > screenY){
+                this.state = OUT;
+            }
             // xoa va cham
             if(cx < 0) cx = 0;
             if(cx > screenX) cx = screenX;
@@ -34,9 +40,10 @@ public class Bullet {
             if(cx == 0 || cx == screenX){
                 dx = - dx;
             }
-            if(cy == 0 || cy == screenY){
+            if(cy == 0 ){
                 dy = - dy;
             }
+
             cx += dx;
             cy += dy;
 

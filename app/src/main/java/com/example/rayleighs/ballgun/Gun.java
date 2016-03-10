@@ -63,7 +63,7 @@ public class Gun {
         Kiem tra vien dan hien tai da bi ban hay chua
         Neu ban roi, thi thay vien dan
          */
-        if(activeBullet == null || activeBullet.state == Bullet.FIRED){
+        if(activeBullet == null || activeBullet.state == Bullet.OUT){
             for(int i=bullets.length -1; i>=0; i--){
                 Bullet b = bullets[i];
                 if(b.state == Bullet.FREE){
@@ -79,7 +79,7 @@ public class Gun {
 
     // ban
     public void fire(){
-        if(activeBullet.state != Bullet.FIRED){
+        if(activeBullet.state != Bullet.FIRED && activeBullet.state != Bullet.OUT){
             activeBullet.state = Bullet.FIRED;
             activeBullet.dx = (topX - baseX)/ 5;
             activeBullet.dy = (topY - baseY)/ 5;

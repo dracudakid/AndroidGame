@@ -65,7 +65,7 @@ public class BallGunView extends View{
         for(int i=0; i<bricks.length; i++){
             Brick brick = bricks[i];
             canvas.drawRect(new RectF(brick.x, brick.y, brick.x+brick.width, brick.y+brick.height), paint);
-//            brickCollision(bullet, brick);
+            brickCollision(gun.activeBullet, brick);
         }
 
 
@@ -113,25 +113,28 @@ public class BallGunView extends View{
     }
 
     private void brickCollision(Bullet bullet, Brick brick){
-        double distanceX = Math.abs((brick.x + brick.width/2) - bullet.cx);
-        double distanceY = Math.abs((brick.y + brick.height/2) - bullet.cy);
+        if(bullet != null){
+            double distanceX = Math.abs((brick.x + brick.width/2) - bullet.cx);
+            double distanceY = Math.abs((brick.y + brick.height/2) - bullet.cy);
 
-        if (distanceX > (brick.width/2 + bullet.radius)) { return; }
-        if (distanceY > (brick.height/2 + bullet.radius)) { return; }
+            if (distanceX > (brick.width/2 + bullet.radius)) { return; }
+            if (distanceY > (brick.height/2 + bullet.radius)) { return; }
 
-        if(distanceX <= brick.width/2){
-            bullet.dy = - bullet.dy;
-            return;
-        }
-        if(distanceY <= brick.height/2){
-            bullet.dx = - bullet.dx;
-            return;
-        }
+            if(distanceX <= brick.width/2){
+                bullet.dy = - bullet.dy;
+                return;
+            }
+            if(distanceY <= brick.height/2){
+                bullet.dx = - bullet.dx;
+                return;
+            }
 
-        double cornerDistance = Math.pow(distanceX - brick.width/2, 2) + Math.pow(distanceY - brick.height/2, 2);
-        if(cornerDistance <= bullet.radius * bullet.radius){
-            bullet.dx = - bullet.dx;
-            bullet.dy = - bullet.dy;
+            double cornerDistance = Math.pow(distanceX - brick.width/2, 2) + Math.pow(distanceY - brick.height/2, 2);
+            if(cornerDistance <= bullet.radius * bullet.radius){
+                bullet.dx = - bullet.dx;
+                bullet.dy = - bullet.dy;
+            }
+
         }
 
     }
