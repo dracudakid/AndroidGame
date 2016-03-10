@@ -7,7 +7,7 @@ import java.util.Random;
  */
 public class Brick {
     float x, y;
-    float width, length;
+    float width, height;
     float dx, dy;
     boolean isMoving;
     Random rand = new Random();
@@ -19,6 +19,6 @@ public class Brick {
         this.y = rand.nextInt(10)*screenY/30;
         this.x = rand.nextInt(5)*screenX/5;
         this.width = screenX/5 - 10;
-        this.length = screenY/30 - 10;
+        this.height = screenY/30 - 10;
     }
 }

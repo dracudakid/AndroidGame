@@ -22,6 +22,10 @@ public class Gun {
 
     boolean stopped = true;
 
+    // so dan da ban
+    Bullet activeBullet;
+
+
     public Gun(float screenX, float screenY) {
         this.length = screenX/5;
 
@@ -44,13 +48,42 @@ public class Gun {
         }
     }
 
-    public void fire(Bullet b){
-        if(!b.fired){
-            b.fired = true;
-            b.dx = (topX - baseX)/length * 10;
-            b.dy = (topY - baseY)/length * 10;
+    // dat dan chinh (chuan bi ban)
+    public void setActiveBullet(Bullet b){
+        b.state = Bullet.LOADED;
+        b.cx = this.baseX;
+        b.cy = this.baseY;
+        this.activeBullet = b;
+    }
+
+    // nap bang dan
+    public void loadBullet(Bullet[] bullets){
+
+        /*
+        Kiem tra vien dan hien tai da bi ban hay chua
+        Neu ban roi, thi thay vien dan
+         */
+        if(activeBullet == null || activeBullet.state == Bullet.FIRED){
+            for(int i=bullets.length -1; i>=0; i--){
+                Bullet b = bullets[i];
+                if(b.state == Bullet.FREE){
+                    setActiveBullet(b);
+
+                    break;
+                }
+            }
         }
 
+
+    }
+
+    // ban
+    public void fire(){
+        if(activeBullet.state != Bullet.FIRED){
+            activeBullet.state = Bullet.FIRED;
+            activeBullet.dx = (topX - baseX)/ 5;
+            activeBullet.dy = (topY - baseY)/ 5;
+        }
     }
 
 }

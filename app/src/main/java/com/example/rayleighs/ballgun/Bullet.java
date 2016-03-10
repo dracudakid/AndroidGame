@@ -4,18 +4,26 @@ package com.example.rayleighs.ballgun;
  * Created by rayleighs on 3/4/16.
  */
 public class Bullet {
+    public static final int FIRED = 2;
+    public static final int LOADED = 1;
+    public static final int FREE = 0;
+
+    int screenX, screenY;
     float cx, cy;
     float radius;
     float dx = 0, dy = 0;
-    boolean fired = false;
-    public Bullet(Gun gun) {
+    int state = FREE;
+
+    public Bullet(int screenX, int screenY, int index){
+        this.screenX = screenX;
+        this.screenY = screenY;
+        this.cx = index * 50;
+        this.cy = screenY - 20;
         this.radius = 8;
-        this.cx = gun.baseX;
-        this.cy = gun.baseY;
     }
 
-    public void move(int screenX, int screenY){
-        if(fired){
+    public void move(){
+        if(state == FIRED){
             // xoa va cham
             if(cx < 0) cx = 0;
             if(cx > screenX) cx = screenX;

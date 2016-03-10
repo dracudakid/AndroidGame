@@ -31,7 +31,7 @@ public class BallGunView extends View{
 
     // calculate the fps
     private long timeThisFrame;
-    Bullet bullet;
+    Bullet bullets[] = new Bullet[3];
     Gun gun;
     Brick[] bricks = new Brick[5];
 
@@ -44,25 +44,28 @@ public class BallGunView extends View{
         screenY = 1230;
 
         gun = new Gun(screenX, screenY);
-        bullet = new Bullet(gun);
+
         for(int i=0; i<5; i++){
             bricks[i] = new Brick(screenX, screenY);
         }
-
+        for(int i=0; i<3; i++){
+            bullets[i] = new Bullet(screenX, screenY, i+1);
+        }
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         // background
-        canvas.drawColor(Color.argb(255, 255, 255, 255));
+        canvas.drawColor(Color.argb(255, 192, 192, 192));
 
 
         // brick
         paint.setColor(Color.BLACK);
-        for(int i=0; i<5; i++){
+        for(int i=0; i<bricks.length; i++){
             Brick brick = bricks[i];
-            canvas.drawRect(new RectF(brick.x, brick.y, brick.x+brick.width, brick.y+brick.length), paint);
+            canvas.drawRect(new RectF(brick.x, brick.y, brick.x+brick.width, brick.y+brick.height), paint);
+//            brickCollision(bullet, brick);
         }
 
 
@@ -73,16 +76,22 @@ public class BallGunView extends View{
 
         canvas.drawCircle(gun.baseX, gun.baseY, 5, paint);
 
-        // bullet
-        canvas.drawCircle(bullet.cx, bullet.cy, bullet.radius, paint);
+        for(int i=0; i< bullets.length; i++){
+            Bullet bullet = bullets[i];
+            canvas.drawCircle(bullet.cx, bullet.cy, bullet.radius, paint);
+            bullet.move();
+        }
+
 
         canvas.drawLine(gun.baseX, gun.baseY, gun.topX, gun.topY, paint);
         Log.d("SIN", Math.sin(Math.PI / 2) + "");
 
         gun.move();
-        bullet.move(screenX, screenY);
+        gun.loadBullet(bullets);
+//         bullet.move(screenX, screenY);
+
         try {
-            Thread.sleep(100);
+            Thread.sleep(30);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -97,9 +106,33 @@ public class BallGunView extends View{
                 break;
             case KeyEvent.ACTION_UP:
                 gun.stopped = true;
-                gun.fire(bullet);
+                gun.fire();
                 break;
         }
         return true;
+    }
+
+    private void brickCollision(Bullet bullet, Brick brick){
+        double distanceX = Math.abs((brick.x + brick.width/2) - bullet.cx);
+        double distanceY = Math.abs((brick.y + brick.height/2) - bullet.cy);
+
+        if (distanceX > (brick.width/2 + bullet.radius)) { return; }
+        if (distanceY > (brick.height/2 + bullet.radius)) { return; }
+
+        if(distanceX <= brick.width/2){
+            bullet.dy = - bullet.dy;
+            return;
+        }
+        if(distanceY <= brick.height/2){
+            bullet.dx = - bullet.dx;
+            return;
+        }
+
+        double cornerDistance = Math.pow(distanceX - brick.width/2, 2) + Math.pow(distanceY - brick.height/2, 2);
+        if(cornerDistance <= bullet.radius * bullet.radius){
+            bullet.dx = - bullet.dx;
+            bullet.dy = - bullet.dy;
+        }
+
     }
 }
