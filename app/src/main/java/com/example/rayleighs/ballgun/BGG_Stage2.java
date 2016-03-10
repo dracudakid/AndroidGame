@@ -10,30 +10,25 @@ import android.view.MotionEvent;
 import android.view.View;
 
 /**
- * Created by rayleighs on 3/4/16.
+ * Created by rayleighs on 3/10/16.
  */
-public class BallGunView extends View{
-
-//    View view;
-
-    volatile boolean playing;
-    boolean paused = true;
-    // frame rate
-    long fps;
-    // calculate the fps
-    private long timeThisFrame;
-
+public class BGG_Stage2 extends View {
     Paint paint;
 
     int screenX;
     int screenY;
 
+    /*
+    Stage 2 includes 2 marks and 1 brick;
+     */
+    Brick brick;
+    Mark marks[] = new Mark[2];
     Bullet bullets[] = new Bullet[3];
     Gun gun;
-    Mark mark;
 
 
-    public BallGunView(Context context) {
+
+    public BGG_Stage2(Context context) {
         super(context);
         paint = new Paint();
 
@@ -41,12 +36,15 @@ public class BallGunView extends View{
         screenY = 1230;
 
         gun = new Gun(screenX, screenY);
-        mark = new Mark(screenY/3, screenX/3, screenX/6);
-
-
         for(int i=0; i<3; i++){
             bullets[i] = new Bullet(screenX, screenY, i+1);
         }
+
+        marks[0] = new Mark(screenX/4, screenY/4, screenX/8);
+        marks[1] = new Mark(screenX*3/5, screenY/5, screenX/10);
+        brick = new Brick(screenX/4 + 100, screenY/4 + 100, screenX/4, screenY/32);
+
+
     }
 
     @Override
@@ -54,19 +52,6 @@ public class BallGunView extends View{
         super.onDraw(canvas);
         // background
         canvas.drawColor(Color.argb(255, 192, 192, 192));
-
-        paint.setColor(Color.WHITE);
-        if(mark.isVisible == true){
-            canvas.drawCircle(mark.cx, mark.cy, mark.radius, paint);
-        }
-
-        // brick
-        paint.setColor(Color.BLACK);
-//        for(int i=0; i<bricks.length; i++){
-//            Brick brick = bricks[i];
-//            canvas.drawRect(new RectF(brick.x, brick.y, brick.x+brick.width, brick.y+brick.height), paint);
-//            brickCollision(gun.activeBullet, brick);
-//        }
 
 
         // gun base
@@ -88,7 +73,22 @@ public class BallGunView extends View{
 
         gun.move();
         gun.loadBullet(bullets);
-        markCollision(gun.activeBullet, mark);
+
+
+        // ve mark
+        paint.setColor(Color.WHITE);
+        for(int i=0; i< marks.length; i++){
+            Mark mark = marks[i];
+            if(mark.isVisible == true){
+                canvas.drawCircle(mark.cx, mark.cy, mark.radius, paint);
+                markCollision(gun.activeBullet, mark);
+            }
+        }
+
+        // brick1
+        paint.setColor(Color.BLACK);
+        canvas.drawRect(brick.getRectF(), paint);
+        brickCollision(gun.activeBullet, brick);
 
         try {
             Thread.sleep(30);

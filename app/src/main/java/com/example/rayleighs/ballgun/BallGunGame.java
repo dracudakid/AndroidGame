@@ -8,7 +8,7 @@ public class BallGunGame extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        BallGunView bgView = new BallGunView(this);
+        BGG_Stage2 bgView = new BGG_Stage2(this);
         setContentView(bgView);
     }
 }
