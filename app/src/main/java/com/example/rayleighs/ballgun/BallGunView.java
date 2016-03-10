@@ -4,10 +4,11 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+
+import java.util.ArrayList;
 
 /**
  * Created by rayleighs on 3/4/16.
@@ -23,15 +24,21 @@ public class BallGunView extends View{
     // calculate the fps
     private long timeThisFrame;
 
+    // bien kiem tra da khoi tao man chua
+    boolean isInitialized;
+
     Paint paint;
 
     int screenX;
     int screenY;
 
-    Bullet bullets[] = new Bullet[3];
     Gun gun;
-    Mark mark;
+    ArrayList<Bullet> bullets  = new ArrayList<>();
 
+    ArrayList<Mark> marks = new ArrayList<>();
+    ArrayList<Brick> bricks = new ArrayList<>();
+
+    int stage = 1;
 
     public BallGunView(Context context) {
         super(context);
@@ -39,13 +46,11 @@ public class BallGunView extends View{
 
         screenX = 720;
         screenY = 1230;
-
+        // gun is the same for different stages
         gun = new Gun(screenX, screenY);
-        mark = new Mark(screenY/3, screenX/3, screenX/6);
-
 
         for(int i=0; i<3; i++){
-            bullets[i] = new Bullet(screenX, screenY, i+1);
+            bullets.add(new Bullet(screenX, screenY, i+1));
         }
     }
 
@@ -55,47 +60,108 @@ public class BallGunView extends View{
         // background
         canvas.drawColor(Color.argb(255, 192, 192, 192));
 
-        paint.setColor(Color.WHITE);
-        if(mark.isVisible == true){
-            canvas.drawCircle(mark.cx, mark.cy, mark.radius, paint);
-        }
+        // khoi tao cac thanh phan cua mang
+        initStage(stage);
 
-        // brick
-        paint.setColor(Color.BLACK);
-//        for(int i=0; i<bricks.length; i++){
-//            Brick brick = bricks[i];
-//            canvas.drawRect(new RectF(brick.x, brick.y, brick.x+brick.width, brick.y+brick.height), paint);
-//            brickCollision(gun.activeBullet, brick);
-//        }
+        // ve cac thanh phan da khoi tao
+        generateStage(canvas);
 
-
-        // gun base
-        paint.setColor(Color.argb(255, 200, 255, 180));
-        canvas.drawCircle(gun.baseX, gun.baseY, gun.length, paint);
-        paint.setColor(Color.BLACK);
-
-        canvas.drawCircle(gun.baseX, gun.baseY, 5, paint);
-
-        for(int i=0; i< bullets.length; i++){
-            Bullet bullet = bullets[i];
-            canvas.drawCircle(bullet.cx, bullet.cy, bullet.radius, paint);
-            bullet.move();
-        }
-
-
-        canvas.drawLine(gun.baseX, gun.baseY, gun.topX, gun.topY, paint);
-        Log.d("SIN", Math.sin(Math.PI / 2) + "");
-
-        gun.move();
+        // nap dan
         gun.loadBullet(bullets);
-        markCollision(gun.activeBullet, mark);
 
+        // di chuyen sung
+        gun.move();
+
+        // kiem tra va cham voi dich va gach
+        marksCollision(gun.activeBullet, marks);
+        bricksCollision(gun.activeBullet, bricks);
+
+        // kiem tra qua mang
+        stageUp();
         try {
             Thread.sleep(30);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         invalidate();
+    }
+
+    public void stageUp(){
+        for(int i=0; i<marks.size(); i++){
+            if(marks.get(i).isVisible) return;
+        }
+        resetComponents();
+        for(int i=0; i<3; i++){
+            bullets.add(new Bullet(screenX, screenY, i+1));
+        }
+        isInitialized = false;
+        stage = stage + 1;
+    }
+
+    private void resetComponents(){
+        marks.removeAll(marks);
+        bricks.removeAll(bricks);
+        bullets.removeAll(bullets);
+        gun.activeBullet = null;
+    }
+
+    public void initStage(int stage){
+        if(isInitialized == false){
+            isInitialized = true;
+            switch (stage){
+                case 1:
+                    marks.add(new Mark(screenX / 3, screenY / 4, screenX / 10));
+                    break;
+                case 2:
+                    marks.add(new Mark(screenX/4, screenY/5, screenX/12));
+                    marks.add(new Mark(screenX*3/4, screenY/4, screenX/12));
+                    bricks.add(new Brick(screenX / 3 + 50, screenY / 4 + 50, screenX / 4, screenY / 40));
+                    break;
+
+            }
+        }
+
+
+    }
+
+    private void generateStage(Canvas canvas) {
+        drawGunBase(canvas);
+        drawBullets(canvas);
+        drawMarks(canvas);
+        drawBricks(canvas);
+
+    }
+    private void drawBricks(Canvas canvas){
+        paint.setColor(Color.BLACK);
+        for(int i=0; i<bricks.size(); i++){
+            Brick b = bricks.get(i);
+            canvas.drawRect(b.getRectF(), paint);
+        }
+    }
+    private void drawMarks(Canvas canvas){
+        paint.setColor(Color.WHITE);
+        for(int i=0; i<marks.size(); i++){
+            Mark m = marks.get(i);
+            if(m.isVisible){
+                canvas.drawCircle(m.cx, m.cy, m.radius, paint);
+            }
+        }
+    }
+    private void drawBullets(Canvas canvas) {
+        for(int i=0; i< bullets.size(); i++){
+            Bullet bullet = bullets.get(i);
+            canvas.drawCircle(bullet.cx, bullet.cy, bullet.radius, paint);
+            bullet.move();
+        }
+    }
+    private void drawGunBase(Canvas canvas){
+        // gun base
+        paint.setColor(Color.argb(255, 200, 255, 180));
+        canvas.drawCircle(gun.baseX, gun.baseY, gun.length, paint);
+        paint.setColor(Color.BLACK);
+
+        canvas.drawCircle(gun.baseX, gun.baseY, 5, paint);
+        canvas.drawLine(gun.baseX, gun.baseY, gun.topX, gun.topY, paint);
     }
 
     @Override
@@ -112,6 +178,17 @@ public class BallGunView extends View{
         return true;
     }
 
+    private void marksCollision(Bullet bullet, ArrayList<Mark> marks){
+        for(int i=0; i<marks.size(); i++){
+            markCollision(bullet, marks.get(i));
+        }
+    }
+
+    private void bricksCollision(Bullet bullet, ArrayList<Brick> bricks){
+        for(int i=0; i<bricks.size(); i++){
+            brickCollision(bullet, bricks.get(i));
+        }
+    }
     private void brickCollision(Bullet bullet, Brick brick){
         if(bullet != null){
             double distanceX = Math.abs((brick.x + brick.width/2) - bullet.cx);

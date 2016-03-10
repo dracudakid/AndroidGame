@@ -2,6 +2,8 @@ package com.example.rayleighs.ballgun;
 
 import android.graphics.RectF;
 
+import java.util.ArrayList;
+
 /**
  * Created by rayleighs on 3/4/16.
  */
@@ -57,15 +59,15 @@ public class Gun {
     }
 
     // nap bang dan
-    public void loadBullet(Bullet[] bullets){
+    public void loadBullet(ArrayList<Bullet> bullets){
 
         /*
         Kiem tra vien dan hien tai da bi ban hay chua
         Neu ban roi, thi thay vien dan
          */
         if(activeBullet == null || activeBullet.state == Bullet.OUT){
-            for(int i=bullets.length -1; i>=0; i--){
-                Bullet b = bullets[i];
+            for(int i=bullets.size() -1; i>=0; i--){
+                Bullet b = bullets.get(i);
                 if(b.state == Bullet.FREE){
                     setActiveBullet(b);
 
