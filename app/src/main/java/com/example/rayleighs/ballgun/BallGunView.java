@@ -1,13 +1,18 @@
 package com.example.rayleighs.ballgun;
 
 import android.content.Context;
+import android.content.res.AssetFileDescriptor;
+import android.content.res.AssetManager;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.media.AudioManager;
+import android.media.SoundPool;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -15,14 +20,17 @@ import java.util.ArrayList;
  */
 public class BallGunView extends View{
 
-//    View view;
+//
+//    volatile boolean playing;
+//    boolean paused = true;
+//    // frame rate
+//    long fps;
+//    // calculate the fps
+//    private long timeThisFrame;
 
-    volatile boolean playing;
-    boolean paused = true;
-    // frame rate
-    long fps;
-    // calculate the fps
-    private long timeThisFrame;
+    SoundPool soundpool = new SoundPool(10, AudioManager.STREAM_MUSIC, 0);
+    int loseLifeID = -1;
+    int explodeID = -1;
 
     // bien kiem tra da khoi tao man chua
     boolean isInitialized;
@@ -43,15 +51,28 @@ public class BallGunView extends View{
     public BallGunView(Context context) {
         super(context);
         paint = new Paint();
-
-        screenX = 720;
-        screenY = 1230;
+        screenX = 480;
+        screenY = 750;
         // gun is the same for different stages
         gun = new Gun(screenX, screenY);
 
         for(int i=0; i<3; i++){
             bullets.add(new Bullet(screenX, screenY, i+1));
         }
+
+        try{
+            // am thanh
+            AssetManager assetManager = context.getAssets();
+            AssetFileDescriptor descriptor;
+
+            descriptor = assetManager.openFd("loseLife.ogg");
+            loseLifeID = soundpool.load(descriptor, 0);
+            descriptor = assetManager.openFd("explode.ogg");
+            explodeID = soundpool.load(descriptor, 0);
+        }catch (IOException e){
+
+        }
+
     }
 
     @Override
@@ -78,12 +99,29 @@ public class BallGunView extends View{
 
         // kiem tra qua mang
         stageUp();
+
+        // kiem tra neu thua
+        resetStage();
+
+        if(stage==4) stage = 0;
         try {
             Thread.sleep(30);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         invalidate();
+    }
+
+    public void resetStage(){
+        for(int i=0; i<bullets.size(); i++){
+            Bullet b = bullets.get(i);
+            if(b.state != Bullet.OUT) return;
+        }
+        resetComponents();
+        for(int i=0; i<3; i++){
+            bullets.add(new Bullet(screenX, screenY, i+1));
+        }
+        isInitialized = false;
     }
 
     public void stageUp(){
@@ -204,10 +242,12 @@ public class BallGunView extends View{
 
             if(distanceX <= brick.width/2){
                 bullet.dy = - bullet.dy;
+                soundpool.play(loseLifeID, 1,1,0,0,1);
                 return;
             }
             if(distanceY <= brick.height/2){
                 bullet.dx = - bullet.dx;
+                soundpool.play(loseLifeID,1,1,0,0,1);
                 return;
             }
 
@@ -215,6 +255,7 @@ public class BallGunView extends View{
             if(cornerDistance <= bullet.radius * bullet.radius){
                 bullet.dx = - bullet.dx;
                 bullet.dy = - bullet.dy;
+                soundpool.play(loseLifeID,1,1,0,0,1);
             }
 
         }
@@ -243,7 +284,9 @@ public class BallGunView extends View{
                     m.dx = - m.dx;
                     m.dy = - m.dy;
                 }
+                soundpool.play(explodeID,1,1,0,0,1);
             }
+
         }
 
     }
