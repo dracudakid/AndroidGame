@@ -35,7 +35,7 @@ public class Gun {
     public void swingToAim(){
         if(!stopped){
             if(angle > Math.PI) angle = Math.PI;
-            if(angle < 0) angle = 0;
+            if(angle <= 0) angle = 0;
             if(angle == Math.PI || angle == 0) speed = -speed;
             angle = angle + speed;
             topX =(float) (baseX + length*Math.cos(angle));

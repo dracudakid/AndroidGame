@@ -25,8 +25,8 @@ public class BallGunView extends View {
 
 
     SoundPool soundpool = new SoundPool(10, AudioManager.STREAM_MUSIC, 0);
-    int loseLifeID = -1;
-    int explodeID = -1;
+    int hitMarkID = -1;
+    int hitBrickID = -1;
 
     // bien kiem tra da khoi tao man chua
     boolean isInitialized;
@@ -66,10 +66,10 @@ public class BallGunView extends View {
             AssetManager assetManager = context.getAssets();
             AssetFileDescriptor descriptor;
 
-            descriptor = assetManager.openFd("loseLife.ogg");
-            loseLifeID = soundpool.load(descriptor, 0);
-            descriptor = assetManager.openFd("explode.ogg");
-            explodeID = soundpool.load(descriptor, 0);
+            descriptor = assetManager.openFd("hitBrick.mp3");
+            hitBrickID = soundpool.load(descriptor, 0);
+            descriptor = assetManager.openFd("hitMark.mp3");
+            hitMarkID = soundpool.load(descriptor, 0);
         }catch (IOException e){
 
         }
@@ -234,12 +234,12 @@ public class BallGunView extends View {
 
             if(distanceX <= brick.width/2){
                 bullet.dy = - bullet.dy;
-                soundpool.play(loseLifeID, 1,1,0,0,1);
+                soundpool.play(hitBrickID, 1,1,0,0,1);
                 return;
             }
             if(distanceY <= brick.height/2){
                 bullet.dx = - bullet.dx;
-                soundpool.play(loseLifeID,1,1,0,0,1);
+                soundpool.play(hitBrickID,1,1,0,0,1);
                 return;
             }
 
@@ -247,7 +247,7 @@ public class BallGunView extends View {
             if(cornerDistance <= bullet.radius * bullet.radius){
                 bullet.dx = - bullet.dx;
                 bullet.dy = - bullet.dy;
-                soundpool.play(loseLifeID,1,1,0,0,1);
+                soundpool.play(hitBrickID,1,1,0,0,1);
             }
 
         }
@@ -256,31 +256,42 @@ public class BallGunView extends View {
 
     private void markCollision(Bullet b, Mark m){
         if(m.isVisible){
-            double d = Math.sqrt((b.cx - m.cx)*(b.cx - m.cx) + (b.cy - m.cy)*(b.cy - m.cy));
-
-            if(d <= b.radius + m.radius) {
+            double distance = Math.sqrt((b.cx - m.cx)*(b.cx - m.cx) + (b.cy - m.cy)*(b.cy - m.cy));
+            if(distance < b.radius + m.radius){
                 m.isVisible = false;
-                if(b.dx * m.dx < 0 && b.dy * m.dy < 0){
-                    b.dx = - b.dx;
-                    b.dy = - b.dy;
-                    m.dx = - m.dx;
-                    m.dy = - m.dy;
-                } else if(b.dx * m.dx < 0){
-                    b.dx =- b.dx;
-                    m.dx = - m.dx;
-                } else if(b.dy * m.dy < 0){
-                    b.dy = - b.dy;
-                    m.dy = - m.dy;
-                } else{
-                    b.dx = - b.dx;
-                    b.dy = - b.dy;
-                    m.dx = - m.dx;
-                    m.dy = - m.dy;
-                }
-                soundpool.play(explodeID,1,1,0,0,1);
+                // collision Point
+                float collisionPointX = ((b.cx * m.radius) + (m.cx * b.radius)) / (b.radius + m.radius);
+                float collisionPointY = ((b.cy * m.radius) + (m.cy * b.radius)) / (b.radius + m.radius);
+
+                // vector N
+                float nVectorX = collisionPointX - m.cx;
+                float nVectorY = collisionPointY - m.cy;
+
+                Log.d("OLD", b.dx + " -  " + b.dy);
+
+                float newDX = b.dx + nVectorX;
+                float newDY = b.dy + nVectorY;
+
+                /*
+                set the length of new V equals to the old one
+                1) dx / dy == newDx / newDy
+                2) dx^2 + dy^2 == lengthsquare
+                3) dx * newDX > 0  // same sign
+                4) dy * newDY > 0  // same sign
+                 */
+
+                float lengthSquare = b.dx * b.dx + b.dy * b.dy;
+                Log.d("NEW", newDX + " ; " + newDY);
+                b.dy = (float) Math.sqrt(lengthSquare/(Math.pow(newDX/newDY, 2) + 1));
+                b.dx = newDX / newDY * b.dy;
+
+                // check 3) 4) condition
+                b.dy = newDY > 0? Math.abs(b.dy) : - Math.abs(b.dy);
+                b.dx = newDX > 0? Math.abs(b.dx) : - Math.abs(b.dx);
+
             }
 
         }
-
     }
+
 }

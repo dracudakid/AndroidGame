@@ -4,6 +4,7 @@ package com.example.rayleighs.ballgun;
  * Created by rayleighs on 3/4/16.
  */
 public class Bullet {
+
     public static final int FIRED = 2;
     public static final int LOADED = 1;
     public static final int FREE = 0;
@@ -21,14 +22,14 @@ public class Bullet {
         this.cx = index * 50;
         this.cy = screenY - 20;
         this.radius = 8;
+
     }
 
     public void fly(){
         if(state == FIRED){
-            screenCollision();
             cx += dx;
             cy += dy;
-
+            screenCollision();
         }
     }
 
@@ -37,15 +38,15 @@ public class Bullet {
             this.state = OUT;
         }
 
-        if(cx < 0) cx = 0;
-        if(cx > screenX) cx = screenX;
-        if(cy < 0) cy = 0;
-        if(cy > screenY) cy = screenY;
+        if(cx - radius < 0) cx = radius;
+        if(cx + radius > screenX) cx = screenX - radius;
+        if(cy - radius < 0) cy = radius;
+//        if(cy + radius > screenY) cy = screenY -radius;
 
-        if(cx == 0 || cx == screenX){
+        if(cx -radius == 0 || cx + radius == screenX){
             dx = - dx;
         }
-        if(cy == 0 ){
+        if(cy - radius == 0 ){
             dy = - dy;
         }
     }
