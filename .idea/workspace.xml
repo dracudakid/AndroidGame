@@ -11,11 +11,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="78025fb3-3ebe-44e3-8623-d8dc236ea247" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/assets/hitBrick.mp3" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/assets/hitMark.mp3" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/app/src/main/assets/hitWall.mp3" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/app/src/main/assets/beep1.ogg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/app/src/main/assets/beep2.ogg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/app/src/main/assets/beep3.ogg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/app/src/main/assets/explode.ogg" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/app/src/main/assets/loseLife.ogg" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/rayleighs/ballgun/BallGunView.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/rayleighs/ballgun/BallGunView.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/rayleighs/ballgun/Bullet.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/rayleighs/ballgun/Bullet.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/rayleighs/ballgun/Brick.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/rayleighs/ballgun/Brick.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/example/rayleighs/ballgun/Gun.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/rayleighs/ballgun/Gun.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
@@ -58,11 +60,11 @@
       <file leaf-file-name="BallGunView.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/rayleighs/ballgun/BallGunView.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.6666667">
-              <caret line="295" column="0" selection-start-line="295" selection-start-column="0" selection-end-line="295" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.29166666">
+              <caret line="256" column="0" selection-start-line="256" selection-start-column="0" selection-end-line="256" selection-end-column="0" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="method#drawGunBase#0;class#BallGunView#0" expanded="false" />
+                <element signature="method#marksCollision#0;class#BallGunView#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -72,7 +74,7 @@
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/rayleighs/ballgun/Gun.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="45" column="17" selection-start-line="45" selection-start-column="17" selection-end-line="45" selection-end-column="17" />
+              <caret line="32" column="5" selection-start-line="32" selection-start-column="5" selection-end-line="32" selection-end-column="5" />
               <folding />
             </state>
           </provider>
@@ -92,10 +94,10 @@
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/rayleighs/ballgun/Brick.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
-              <caret line="11" column="21" selection-start-line="11" selection-start-column="21" selection-end-line="11" selection-end-column="21" />
+              <caret line="12" column="26" selection-start-line="12" selection-start-column="26" selection-end-line="12" selection-end-column="26" />
               <folding>
-                <element signature="e#432#433#0" expanded="true" />
-                <element signature="e#489#490#0" expanded="true" />
+                <element signature="e#510#511#0" expanded="true" />
+                <element signature="e#567#568#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -1662,9 +1664,9 @@
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/rayleighs/ballgun/BGG_Stage2.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/rayleighs/ballgun/Stage.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/rayleighs/ballgun/Mark.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/example/rayleighs/ballgun/Brick.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/rayleighs/ballgun/Bullet.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/rayleighs/ballgun/Gun.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/example/rayleighs/ballgun/Brick.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/example/rayleighs/ballgun/BallGunView.java" />
       </list>
     </option>
@@ -1680,7 +1682,7 @@
     <order />
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="50" />
+    <option name="x" value="1416" />
     <option name="y" value="-4" />
     <option name="width" value="1317" />
     <option name="height" value="773" />
@@ -1786,7 +1788,7 @@
     <property name="recentsLimit" value="5" />
     <property name="OverrideImplement.combined" value="true" />
     <property name="OverrideImplement.overriding.sorted" value="false" />
-    <property name="ANDROID_EXTENDED_DEVICE_CHOOSER_SERIALS" value="192.168.56.101:5555" />
+    <property name="ANDROID_EXTENDED_DEVICE_CHOOSER_SERIALS" value="HP55WYZ60413" />
     <property name="ANDROID_EXTENDED_DEVICE_CHOOSER_AVD" value="3_2_HVGA_slider_ADP1_API_22" />
     <property name="FullScreen" value="false" />
   </component>
@@ -1977,15 +1979,15 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="50" y="-4" width="1317" height="773" extended-state="6" />
-    <editor active="true" />
+    <frame x="1416" y="-4" width="1317" height="773" extended-state="6" />
+    <editor active="false" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Android Model" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Android Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.37198067" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Android Monitor" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.37198067" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Captures" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3993559" sideWeight="0.5" order="13" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
@@ -2039,7 +2041,7 @@
           <caret line="82" column="21" selection-start-line="82" selection-start-column="21" selection-end-line="82" selection-end-column="21" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="method#drawGunBase#0;class#BallGunView#0" expanded="false" />
+            <element signature="method#marksCollision#0;class#BallGunView#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -2057,8 +2059,8 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="12" column="9" selection-start-line="12" selection-start-column="9" selection-end-line="12" selection-end-column="9" />
           <folding>
-            <element signature="e#432#433#0" expanded="true" />
-            <element signature="e#489#490#0" expanded="true" />
+            <element signature="e#510#511#0" expanded="true" />
+            <element signature="e#567#568#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -2093,7 +2095,7 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="method#drawGunBase#0;class#BallGunView#0" expanded="false" />
+            <element signature="method#marksCollision#0;class#BallGunView#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -2111,8 +2113,8 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="12" column="9" selection-start-line="12" selection-start-column="9" selection-end-line="12" selection-end-column="9" />
           <folding>
-            <element signature="e#432#433#0" expanded="true" />
-            <element signature="e#489#490#0" expanded="true" />
+            <element signature="e#510#511#0" expanded="true" />
+            <element signature="e#567#568#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -2147,7 +2149,7 @@
           <caret line="166" column="5" selection-start-line="25" selection-start-column="4" selection-end-line="166" selection-end-column="5" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="method#drawGunBase#0;class#BallGunView#0" expanded="false" />
+            <element signature="method#marksCollision#0;class#BallGunView#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -2165,8 +2167,8 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="12" column="9" selection-start-line="12" selection-start-column="9" selection-end-line="12" selection-end-column="9" />
           <folding>
-            <element signature="e#432#433#0" expanded="true" />
-            <element signature="e#489#490#0" expanded="true" />
+            <element signature="e#510#511#0" expanded="true" />
+            <element signature="e#567#568#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -2201,7 +2203,7 @@
           <caret line="53" column="13" selection-start-line="53" selection-start-column="13" selection-end-line="53" selection-end-column="13" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="method#drawGunBase#0;class#BallGunView#0" expanded="false" />
+            <element signature="method#marksCollision#0;class#BallGunView#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -2211,8 +2213,8 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#432#433#0" expanded="true" />
-            <element signature="e#489#490#0" expanded="true" />
+            <element signature="e#510#511#0" expanded="true" />
+            <element signature="e#567#568#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -2257,7 +2259,7 @@
           <caret line="13" column="3" selection-start-line="13" selection-start-column="3" selection-end-line="13" selection-end-column="3" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="method#drawGunBase#0;class#BallGunView#0" expanded="false" />
+            <element signature="method#marksCollision#0;class#BallGunView#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -2302,7 +2304,7 @@
           <caret line="0" column="9" selection-start-line="0" selection-start-column="9" selection-end-line="65" selection-end-column="27" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="method#drawGunBase#0;class#BallGunView#0" expanded="false" />
+            <element signature="method#marksCollision#0;class#BallGunView#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -2347,7 +2349,7 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="method#drawGunBase#0;class#BallGunView#0" expanded="false" />
+            <element signature="method#marksCollision#0;class#BallGunView#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -2392,7 +2394,7 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="method#drawGunBase#0;class#BallGunView#0" expanded="false" />
+            <element signature="method#marksCollision#0;class#BallGunView#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -2438,25 +2440,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/rayleighs/ballgun/Mark.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="6" column="0" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/rayleighs/ballgun/Brick.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="11" column="21" selection-start-line="11" selection-start-column="21" selection-end-line="11" selection-end-column="21" />
-          <folding>
-            <element signature="e#432#433#0" expanded="true" />
-            <element signature="e#489#490#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/rayleighs/ballgun/BallGunGame.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -2473,21 +2456,40 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/rayleighs/ballgun/Brick.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="12" column="26" selection-start-line="12" selection-start-column="26" selection-end-line="12" selection-end-column="26" />
+          <folding>
+            <element signature="e#510#511#0" expanded="true" />
+            <element signature="e#567#568#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/rayleighs/ballgun/Mark.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="6" column="0" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/rayleighs/ballgun/Gun.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="45" column="17" selection-start-line="45" selection-start-column="17" selection-end-line="45" selection-end-column="17" />
+          <caret line="32" column="5" selection-start-line="32" selection-start-column="5" selection-end-line="32" selection-end-column="5" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/example/rayleighs/ballgun/BallGunView.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.6666667">
-          <caret line="295" column="0" selection-start-line="295" selection-start-column="0" selection-end-line="295" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.29166666">
+          <caret line="256" column="0" selection-start-line="256" selection-start-column="0" selection-end-line="256" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="method#drawGunBase#0;class#BallGunView#0" expanded="false" />
+            <element signature="method#marksCollision#0;class#BallGunView#0" expanded="false" />
           </folding>
         </state>
       </provider>

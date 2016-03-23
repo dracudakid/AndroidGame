@@ -29,7 +29,7 @@ public class Gun {
         this.topX = screenX/2;
         this.topY = this.baseY - this.length;
         this.angle = Math.PI / 2;
-        this.speed = Math.PI/32;
+        this.speed = Math.PI/64;
     }
 
     public void swingToAim(){

@@ -48,7 +48,7 @@ public class BallGunView extends View {
         super(context);
         DisplayMetrics disp = new DisplayMetrics();
                 ((Activity) getContext()).getWindowManager().getDefaultDisplay().getMetrics(disp);
-        Log.d("WIDTH_HEIGHT", disp.widthPixels+" "+ disp.heightPixels);
+        Log.d("WIDTH_HEIGHT", disp.widthPixels + " " + disp.heightPixels);
 
         paint = new Paint();
         screenX = disp.widthPixels;
@@ -226,6 +226,7 @@ public class BallGunView extends View {
     }
     private void brickCollision(Bullet bullet, Brick brick){
         if(bullet != null){
+
             double distanceX = Math.abs((brick.x + brick.width/2) - bullet.cx);
             double distanceY = Math.abs((brick.y + brick.height/2) - bullet.cy);
 
