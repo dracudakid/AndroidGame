@@ -1,21 +1,15 @@
 package com.example.rayleighs.ballgun;
 
-import android.graphics.RectF;
-
 import java.util.ArrayList;
 
 /**
  * Created by rayleighs on 3/4/16.
  */
 public class Gun {
-    private RectF rect;
-
-    // chieu dai sung
     float length;
 
     // toa do nong sung
     float topX, topY;
-
     // toa do diem dat sung
     float baseX, baseY;
 
@@ -24,7 +18,6 @@ public class Gun {
 
     boolean stopped = true;
 
-    // so dan da ban
     Bullet activeBullet;
 
 
@@ -39,7 +32,7 @@ public class Gun {
         this.speed = Math.PI/32;
     }
 
-    public void move(){
+    public void swingToAim(){
         if(!stopped){
             if(angle > Math.PI) angle = Math.PI;
             if(angle < 0) angle = 0;
@@ -50,7 +43,6 @@ public class Gun {
         }
     }
 
-    // dat dan chinh (chuan bi ban)
     public void setActiveBullet(Bullet b){
         b.state = Bullet.LOADED;
         b.cx = this.baseX;
@@ -58,13 +50,7 @@ public class Gun {
         this.activeBullet = b;
     }
 
-    // nap bang dan
     public void loadBullet(ArrayList<Bullet> bullets){
-
-        /*
-        Kiem tra vien dan hien tai da bi ban hay chua
-        Neu ban roi, thi thay vien dan
-         */
         if(activeBullet == null || activeBullet.state == Bullet.OUT){
             for(int i=bullets.size() -1; i>=0; i--){
                 Bullet b = bullets.get(i);
@@ -75,11 +61,8 @@ public class Gun {
                 }
             }
         }
-
-
     }
 
-    // ban
     public void fire(){
         if(activeBullet.state != Bullet.FIRED && activeBullet.state != Bullet.OUT){
             activeBullet.state = Bullet.FIRED;

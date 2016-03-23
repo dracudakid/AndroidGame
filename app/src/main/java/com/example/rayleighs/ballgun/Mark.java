@@ -4,8 +4,6 @@ package com.example.rayleighs.ballgun;
  * Created by rayleighs on 3/10/16.
  */
 public class Mark {
-    int screenX;
-    int screenY;
     float cx, cy;
     float radius;
     float dx, dy;

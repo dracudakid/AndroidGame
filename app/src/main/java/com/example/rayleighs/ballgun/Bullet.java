@@ -23,30 +23,30 @@ public class Bullet {
         this.radius = 8;
     }
 
-    public void move(){
+    public void fly(){
         if(state == FIRED){
-
-            // kiem tra xem
-            if(cy > screenY){
-                this.state = OUT;
-            }
-            // xoa va cham
-            if(cx < 0) cx = 0;
-            if(cx > screenX) cx = screenX;
-            if(cy < 0) cy = 0;
-            if(cy > screenY) cy = screenY;
-
-            // kiem tra va cham
-            if(cx == 0 || cx == screenX){
-                dx = - dx;
-            }
-            if(cy == 0 ){
-                dy = - dy;
-            }
-
+            screenCollision();
             cx += dx;
             cy += dy;
 
+        }
+    }
+
+    private void screenCollision(){
+        if(cy > screenY){
+            this.state = OUT;
+        }
+
+        if(cx < 0) cx = 0;
+        if(cx > screenX) cx = screenX;
+        if(cy < 0) cy = 0;
+        if(cy > screenY) cy = screenY;
+
+        if(cx == 0 || cx == screenX){
+            dx = - dx;
+        }
+        if(cy == 0 ){
+            dy = - dy;
         }
     }
 }

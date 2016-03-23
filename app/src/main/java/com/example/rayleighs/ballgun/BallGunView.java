@@ -1,5 +1,6 @@
 package com.example.rayleighs.ballgun;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
@@ -8,6 +9,8 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.media.AudioManager;
 import android.media.SoundPool;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -18,15 +21,8 @@ import java.util.ArrayList;
 /**
  * Created by rayleighs on 3/4/16.
  */
-public class BallGunView extends View{
+public class BallGunView extends View {
 
-//
-//    volatile boolean playing;
-//    boolean paused = true;
-//    // frame rate
-//    long fps;
-//    // calculate the fps
-//    private long timeThisFrame;
 
     SoundPool soundpool = new SoundPool(10, AudioManager.STREAM_MUSIC, 0);
     int loseLifeID = -1;
@@ -50,9 +46,15 @@ public class BallGunView extends View{
 
     public BallGunView(Context context) {
         super(context);
+        DisplayMetrics disp = new DisplayMetrics();
+                ((Activity) getContext()).getWindowManager().getDefaultDisplay().getMetrics(disp);
+        Log.d("WIDTH_HEIGHT", disp.widthPixels+" "+ disp.heightPixels);
+
         paint = new Paint();
-        screenX = 480;
-        screenY = 750;
+        screenX = disp.widthPixels;
+        // screenY in onDraw method is smaller than screenY of disp, dont know why
+        screenY = disp.heightPixels - 50;
+
         // gun is the same for different stages
         gun = new Gun(screenX, screenY);
 
@@ -61,7 +63,6 @@ public class BallGunView extends View{
         }
 
         try{
-            // am thanh
             AssetManager assetManager = context.getAssets();
             AssetFileDescriptor descriptor;
 
@@ -81,27 +82,15 @@ public class BallGunView extends View{
         // background
         canvas.drawColor(Color.argb(255, 192, 192, 192));
 
-        // khoi tao cac thanh phan cua mang
-        initStage(stage);
+        drawComponents(canvas, stage);
 
-        // ve cac thanh phan da khoi tao
-        generateStage(canvas);
-
-        // nap dan
         gun.loadBullet(bullets);
+        gun.swingToAim();
 
-        // di chuyen sung
-        gun.move();
-
-        // kiem tra va cham voi dich va gach
         marksCollision(gun.activeBullet, marks);
         bricksCollision(gun.activeBullet, bricks);
 
-        // kiem tra qua mang
-        stageUp();
-
-        // kiem tra neu thua
-        resetStage();
+        checkStageOver();
 
         if(stage==4) stage = 0;
         try {
@@ -112,28 +101,31 @@ public class BallGunView extends View{
         invalidate();
     }
 
-    public void resetStage(){
-        for(int i=0; i<bullets.size(); i++){
-            Bullet b = bullets.get(i);
-            if(b.state != Bullet.OUT) return;
+    // won the stage or lost the stage
+    public void checkStageOver(){
+        if(checkWinStage() || checkLoseStage()){
+            if(checkWinStage()) stage = stage + 1;
+            resetComponents();
+            for(int i=0; i<3; i++){
+                bullets.add(new Bullet(screenX, screenY, i+1));
+            }
+            isInitialized = false;
         }
-        resetComponents();
-        for(int i=0; i<3; i++){
-            bullets.add(new Bullet(screenX, screenY, i+1));
-        }
-        isInitialized = false;
     }
 
-    public void stageUp(){
+    private boolean checkWinStage(){
         for(int i=0; i<marks.size(); i++){
-            if(marks.get(i).isVisible) return;
+            if(marks.get(i).isVisible) return false;
         }
-        resetComponents();
-        for(int i=0; i<3; i++){
-            bullets.add(new Bullet(screenX, screenY, i+1));
+        return true;
+    }
+
+    private boolean checkLoseStage(){
+        for(int i=0; i<bullets.size(); i++){
+            Bullet b = bullets.get(i);
+            if(b.state != Bullet.OUT) return false;
         }
-        isInitialized = false;
-        stage = stage + 1;
+        return true;
     }
 
     private void resetComponents(){
@@ -143,36 +135,36 @@ public class BallGunView extends View{
         gun.activeBullet = null;
     }
 
-    public void initStage(int stage){
+
+
+    private void drawComponents(Canvas canvas, int stage) {
+        // initial components of stage if components are not initialized
         if(isInitialized == false){
-            isInitialized = true;
-            switch (stage){
-                case 1:
-                    marks.add(new Mark(screenX / 3, screenY / 4, screenX / 10));
-                    break;
-                case 2:
-                    marks.add(new Mark(screenX/4, screenY/5, screenX/12));
-                    marks.add(new Mark(screenX*3/4, screenY/4, screenX/12));
-                    bricks.add(new Brick(screenX / 3 + 50, screenY / 4 + 50, screenX / 4, screenY / 40));
-                    break;
-                case 3:
-                    marks.add(new Mark(screenX/4, screenY/6, screenX/15));
-                    marks.add(new Mark(screenX*4/5, screenY/7, screenX/18));
-                    bricks.add(new Brick(50, screenY / 5 + 50, screenX / 4, screenY / 40));
-                    bricks.add(new Brick(screenX *3/4, screenY / 5 + 50, screenX / 4, screenY / 40));
-
-            }
+            initializeComponents(stage);
         }
-
-
-    }
-
-    private void generateStage(Canvas canvas) {
         drawGunBase(canvas);
         drawBullets(canvas);
         drawMarks(canvas);
         drawBricks(canvas);
 
+    }
+    private void initializeComponents(int stage){
+        isInitialized = true;
+        switch (stage){
+            case 1:
+                marks.add(new Mark(screenX / 3, screenY / 4, screenX / 10));
+                break;
+            case 2:
+                marks.add(new Mark(screenX/4, screenY/5, screenX/12));
+                marks.add(new Mark(screenX*3/4, screenY/4, screenX/12));
+                bricks.add(new Brick(screenX / 3 + 50, screenY / 4 + 50, screenX / 4, screenY / 40));
+                break;
+            case 3:
+                marks.add(new Mark(screenX/4, screenY/6, screenX/15));
+                marks.add(new Mark(screenX*4/5, screenY/7, screenX/18));
+                bricks.add(new Brick(50, screenY / 5 + 50, screenX / 4, screenY / 40));
+                bricks.add(new Brick(screenX *3/4, screenY / 5 + 50, screenX / 4, screenY / 40));
+        }
     }
     private void drawBricks(Canvas canvas){
         paint.setColor(Color.BLACK);
@@ -194,7 +186,7 @@ public class BallGunView extends View{
         for(int i=0; i< bullets.size(); i++){
             Bullet bullet = bullets.get(i);
             canvas.drawCircle(bullet.cx, bullet.cy, bullet.radius, paint);
-            bullet.move();
+            bullet.fly();
         }
     }
     private void drawGunBase(Canvas canvas){
@@ -265,7 +257,8 @@ public class BallGunView extends View{
     private void markCollision(Bullet b, Mark m){
         if(m.isVisible){
             double d = Math.sqrt((b.cx - m.cx)*(b.cx - m.cx) + (b.cy - m.cy)*(b.cy - m.cy));
-            if(d <= b.radius + m.radius){
+
+            if(d <= b.radius + m.radius) {
                 m.isVisible = false;
                 if(b.dx * m.dx < 0 && b.dy * m.dy < 0){
                     b.dx = - b.dx;
