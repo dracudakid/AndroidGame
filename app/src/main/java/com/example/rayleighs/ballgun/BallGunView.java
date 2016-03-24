@@ -42,7 +42,7 @@ public class BallGunView extends View {
     ArrayList<Mark> marks = new ArrayList<>();
     ArrayList<Brick> bricks = new ArrayList<>();
 
-    int stage = 1;
+    int stage = 2;
 
     public BallGunView(Context context) {
         super(context);
@@ -89,7 +89,6 @@ public class BallGunView extends View {
 
         marksCollision(gun.activeBullet, marks);
         bricksCollision(gun.activeBullet, bricks);
-
         checkStageOver();
 
         if(stage==4) stage = 0;
@@ -185,8 +184,9 @@ public class BallGunView extends View {
     private void drawBullets(Canvas canvas) {
         for(int i=0; i< bullets.size(); i++){
             Bullet bullet = bullets.get(i);
-            canvas.drawCircle(bullet.cx, bullet.cy, bullet.radius, paint);
             bullet.fly();
+            canvas.drawCircle(bullet.cx, bullet.cy, bullet.radius, paint);
+
         }
     }
     private void drawGunBase(Canvas canvas){
@@ -224,6 +224,7 @@ public class BallGunView extends View {
             brickCollision(bullet, bricks.get(i));
         }
     }
+    /*
     private void brickCollision(Bullet bullet, Brick brick){
         if(bullet != null){
 
@@ -254,12 +255,56 @@ public class BallGunView extends View {
         }
 
     }
+*/
+    private void brickCollision(Bullet bullet, Brick brick){
+        if(bullet != null){
+            //check the order up, down, right, left
+            if(bullet.cx >= brick.x
+                    && bullet.cx <= (brick.x+brick.width)
+                    && (bullet.cy-bullet.radius) >= brick.y
+                    && (bullet.cy-bullet.radius) <= (brick.y+brick.height))
+            {
+                // top down
+                // bottom up
+                bullet.dy = -bullet.dy;
+                bullet.cy = brick.y + brick.height + bullet.radius;
+                soundpool.play(hitBrickID,1,1,0,0,1);
+            }
+            else if(bullet.cx>=brick.x && bullet.cx <= (brick.x+brick.width)
+                    &&(bullet.cy+bullet.radius) >= brick.y
+                    && (bullet.cy+bullet.radius) <= (brick.y+bullet.dy))
+            {
+                // top down
+                bullet.dy = -bullet.dy;
+                bullet.cy = brick.y - bullet.radius;
+                soundpool.play(hitBrickID,1,1,0,0,1);
+            }
 
+            else if(bullet.cy>=brick.y && bullet.cy <= (brick.y+brick.height)
+                    && (bullet.cx-bullet.radius >= brick.x+brick.width-bullet.dx)
+                    && (bullet.cx-bullet.radius) <= (brick.x+brick.width))
+            {
+                bullet.dx = -bullet.dx;
+                bullet.cx = brick.x + brick.width+bullet.radius;
+                soundpool.play(hitBrickID,1,1,0,0,1);
+            }
+            else if(bullet.cy >= brick.y
+                    && bullet.cy<=(brick.y+brick.height)
+                    && (bullet.cx+bullet.radius) >= brick.x
+                    && (bullet.cx+bullet.radius) <= (brick.x+bullet.dx))
+            {
+                bullet.dx = -bullet.dx;
+                bullet.cx = brick.x - bullet.radius;
+                soundpool.play(hitBrickID,1,1,0,0,1);
+            }
+        }
+    }
     private void markCollision(Bullet b, Mark m){
         if(m.isVisible){
             double distance = Math.sqrt((b.cx - m.cx)*(b.cx - m.cx) + (b.cy - m.cy)*(b.cy - m.cy));
             if(distance < b.radius + m.radius){
-                m.isVisible = false;
+                soundpool.play(hitMarkID,1,1,0,0,1);
+//                m.isVisible = false;
                 // collision Point
                 float collisionPointX = ((b.cx * m.radius) + (m.cx * b.radius)) / (b.radius + m.radius);
                 float collisionPointY = ((b.cy * m.radius) + (m.cy * b.radius)) / (b.radius + m.radius);
