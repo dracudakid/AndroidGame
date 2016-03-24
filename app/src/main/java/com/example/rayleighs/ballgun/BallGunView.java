@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -23,6 +25,11 @@ import java.util.ArrayList;
  */
 public class BallGunView extends View {
 
+    private final static int WIN = 1;
+    private final static int LOSE = -1;
+    private final static int PLAYING = 0;
+
+    int state = PLAYING;
 
     SoundPool soundpool = new SoundPool(10, AudioManager.STREAM_MUSIC, 0);
     int hitMarkID = -1;
@@ -35,14 +42,16 @@ public class BallGunView extends View {
 
     int screenX;
     int screenY;
-
+    Button btn_Next;
+    Bitmap background = BitmapFactory.decodeResource(getResources(), R.drawable.bg);
+    Bitmap backgroundScale;
     Gun gun;
     ArrayList<Bullet> bullets  = new ArrayList<>();
 
     ArrayList<Mark> marks = new ArrayList<>();
     ArrayList<Brick> bricks = new ArrayList<>();
 
-    int stage = 2;
+    int stage = 1;
 
     public BallGunView(Context context) {
         super(context);
@@ -54,6 +63,9 @@ public class BallGunView extends View {
         screenX = disp.widthPixels;
         // screenY in onDraw method is smaller than screenY of disp, dont know why
         screenY = disp.heightPixels - 50;
+
+        btn_Next = new Button(screenX, screenY);
+        backgroundScale = Bitmap.createScaledBitmap(background, screenX, screenY, false);
 
         // gun is the same for different stages
         gun = new Gun(screenX, screenY);
@@ -81,7 +93,7 @@ public class BallGunView extends View {
         super.onDraw(canvas);
         // background
         canvas.drawColor(Color.argb(255, 192, 192, 192));
-
+        canvas.drawBitmap(backgroundScale, 0, 0, null);
         drawComponents(canvas, stage);
 
         gun.loadBullet(bullets);
@@ -89,9 +101,9 @@ public class BallGunView extends View {
 
         marksCollision(gun.activeBullet, marks);
         bricksCollision(gun.activeBullet, bricks);
-        checkStageOver();
+        if(state==PLAYING)checkStageOver();
 
-        if(stage==4) stage = 0;
+        if(stage==5) stage = 1;
         try {
             Thread.sleep(30);
         } catch (InterruptedException e) {
@@ -116,6 +128,7 @@ public class BallGunView extends View {
         for(int i=0; i<marks.size(); i++){
             if(marks.get(i).isVisible) return false;
         }
+        state = WIN;
         return true;
     }
 
@@ -124,6 +137,7 @@ public class BallGunView extends View {
             Bullet b = bullets.get(i);
             if(b.state != Bullet.OUT) return false;
         }
+        state = LOSE;
         return true;
     }
 
@@ -138,6 +152,15 @@ public class BallGunView extends View {
 
     private void drawComponents(Canvas canvas, int stage) {
         // initial components of stage if components are not initialized
+        if(state == WIN) {
+            drawNextButton(canvas);
+            return;
+        }
+        if(state == LOSE){
+            drawAgainButton(canvas);
+            return;
+        }
+
         if(isInitialized == false){
             initializeComponents(stage);
         }
@@ -156,13 +179,19 @@ public class BallGunView extends View {
             case 2:
                 marks.add(new Mark(screenX/4, screenY/5, screenX/12));
                 marks.add(new Mark(screenX*3/4, screenY/4, screenX/12));
-                bricks.add(new Brick(screenX / 3 + 50, screenY / 4 + 50, screenX / 4, screenY / 40));
+                bricks.add(new Brick(screenX / 3 + 50, screenY/ 3 + 300, screenX / 4, screenY / 40));
                 break;
             case 3:
                 marks.add(new Mark(screenX/4, screenY/6, screenX/15));
                 marks.add(new Mark(screenX*4/5, screenY/7, screenX/18));
-                bricks.add(new Brick(50, screenY / 5 + 50, screenX / 4, screenY / 40));
+                bricks.add(new Brick(50, screenY / 5 + 150, screenX / 4, screenY / 40));
                 bricks.add(new Brick(screenX *3/4, screenY / 5 + 50, screenX / 4, screenY / 40));
+                break;
+            case 4:
+                marks.add(new Mark(screenX-screenX/5, screenY/7, screenX/18));
+                marks.add(new Mark(screenX/2 - screenX/4, screenY/2-screenX/9, screenX/18));
+                bricks.add(new Brick(screenX*2/3, screenY / 5 + 50, screenX / 4, screenY / 40));
+                bricks.add(new Brick(50, screenY /2, screenX / 4, screenY / 40));
         }
     }
     private void drawBricks(Canvas canvas){
@@ -173,7 +202,7 @@ public class BallGunView extends View {
         }
     }
     private void drawMarks(Canvas canvas){
-        paint.setColor(Color.WHITE);
+        paint.setColor(Color.YELLOW);
         for(int i=0; i<marks.size(); i++){
             Mark m = marks.get(i);
             if(m.isVisible){
@@ -191,12 +220,24 @@ public class BallGunView extends View {
     }
     private void drawGunBase(Canvas canvas){
         // gun base
-        paint.setColor(Color.argb(255, 200, 255, 180));
+        paint.setColor(Color.argb(255, 156, 73, 0));
         canvas.drawCircle(gun.baseX, gun.baseY, gun.length, paint);
         paint.setColor(Color.BLACK);
 
         canvas.drawCircle(gun.baseX, gun.baseY, 5, paint);
         canvas.drawLine(gun.baseX, gun.baseY, gun.topX, gun.topY, paint);
+    }
+
+    private void drawNextButton(Canvas canvas){
+        Bitmap nextBtnDraw = BitmapFactory.decodeResource(getResources(), R.drawable.next_btn);
+        Bitmap nextBtnScale = Bitmap.createScaledBitmap(nextBtnDraw,btn_Next.width,btn_Next.heigh,true);
+        canvas.drawBitmap(nextBtnScale, btn_Next.x, btn_Next.y, paint);
+    }
+
+    private void drawAgainButton(Canvas canvas){
+        Bitmap againBtnDraw = BitmapFactory.decodeResource(getResources(), R.drawable.play_again);
+        Bitmap againBtnScale = Bitmap.createScaledBitmap(againBtnDraw,btn_Next.width,btn_Next.heigh,true);
+        canvas.drawBitmap(againBtnScale, btn_Next.x, btn_Next.y, paint);
     }
 
     @Override
@@ -207,7 +248,13 @@ public class BallGunView extends View {
                 break;
             case KeyEvent.ACTION_UP:
                 gun.stopped = true;
-                gun.fire();
+                if(state == WIN || state == LOSE) {
+                    boolean isTouch = btn_Next.onTouch_Next(event.getX(), event.getY());
+                    if(isTouch) state = PLAYING;
+
+                } else if(state== PLAYING){
+                    gun.fire();
+                }
                 break;
         }
         return true;
@@ -224,7 +271,7 @@ public class BallGunView extends View {
             brickCollision(bullet, bricks.get(i));
         }
     }
-    /*
+
     private void brickCollision(Bullet bullet, Brick brick){
         if(bullet != null){
 
@@ -255,7 +302,7 @@ public class BallGunView extends View {
         }
 
     }
-*/
+/*
     private void brickCollision(Bullet bullet, Brick brick){
         if(bullet != null){
             //check the order up, down, right, left
@@ -299,12 +346,13 @@ public class BallGunView extends View {
             }
         }
     }
+    */
     private void markCollision(Bullet b, Mark m){
         if(m.isVisible){
             double distance = Math.sqrt((b.cx - m.cx)*(b.cx - m.cx) + (b.cy - m.cy)*(b.cy - m.cy));
             if(distance < b.radius + m.radius){
                 soundpool.play(hitMarkID,1,1,0,0,1);
-//                m.isVisible = false;
+                m.isVisible = false;
                 // collision Point
                 float collisionPointX = ((b.cx * m.radius) + (m.cx * b.radius)) / (b.radius + m.radius);
                 float collisionPointY = ((b.cy * m.radius) + (m.cy * b.radius)) / (b.radius + m.radius);
